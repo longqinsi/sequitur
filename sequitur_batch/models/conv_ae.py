@@ -29,52 +29,6 @@ class UnFlatten(nn.Module):
         return x.reshape((1, self.in_channels, *self.input_dims))
 
 
-# class PadExternal(nn.Module):
-#     def __init__(self, padded_input_dim):
-#         super(PadExternal, self).__init__()
-#
-#         self.targ_input_dim = padded_input_dim
-#
-#     def forward(self, input):
-#         # Input can either be a rectangular prism or a cube
-#         return input # TODO
-#
-#
-# class PadInternal(nn.Module):
-#     def __init__(self, padding, dim):
-#         super(PadInternal, self).__init__()
-#
-#         self.padding, self.dim = padding, dim
-#
-#     def _calculate_padded_dim(self, dim_size):
-#         return ((dim_size - 1) * self.padding) + dim_size
-#
-#     def forward(self, input):
-#         stride = self.padding + 1
-#
-#         if self.dim == 3:
-#             _, in_channels, m, n, o = input.shape
-#             input = input.reshape((in_channels, m, n, o))
-#             output = torch.zeros(
-#                 in_channels,
-#                 self._calculate_padded_dim(m),
-#                 self._calculate_padded_dim(n),
-#                 self._calculate_padded_dim(o)
-#             )
-#             output[:, ::stride, ::stride, ::stride] = input
-#         elif self.dim == 2:
-#             _, in_channels, m, n = input.shape
-#             input = input.reshape((in_channels, m, n))
-#             output = torch.zeros(
-#                 in_channels,
-#                 self._calculate_padded_dim(m),
-#                 self._calculate_padded_dim(n)
-#             )
-#             output[:, ::stride, ::stride] = input
-#
-#         return output.reshape((1, *output.shape))
-
-
 class ConvUnit(nn.Module):
     def __init__(self, in_channels, out_channels, kernel, stride, dim):
         super(ConvUnit, self).__init__()

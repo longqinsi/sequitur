@@ -4,13 +4,13 @@
 
 ```python
 import torch
-from sequitur.models import LINEAR_AE
-from sequitur import quick_train
+from sequitur_single.models import LINEAR_AE
+from sequitur_single import quick_train
 
-train_seqs = [torch.randn(4) for _ in range(100)] # 100 sequences of length 4
+train_seqs = [torch.randn(4) for _ in range(100)]  # 100 sequences of length 4
 encoder, decoder, _, _ = quick_train(LINEAR_AE, train_seqs, encoding_dim=2, denoise=True)
 
-encoder(torch.randn(4)) # => torch.tensor([0.19, 0.84])
+encoder(torch.randn(4))  # => torch.tensor([0.19, 0.84])
 ```
 
 Each autoencoder learns to represent input sequences as lower-dimensional, fixed-size vectors. This can be useful for finding patterns among sequences, clustering sequences, or converting sequences into inputs for other algorithms.
@@ -38,7 +38,7 @@ First, you need to prepare a set of example sequences to train an autoencoder on
 Next, you need to choose an autoencoder model. If you're working with sequences of numbers (e.g. time series) or 1D vectors (e.g. word vectors), then you should use the `LINEAR_AE` or `LSTM_AE` model. For sequences of 2D matrices (e.g. videos) or 3D matrices (e.g. fMRI scans), you'll want to use `CONV_LSTM_AE`. Each model is a PyTorch module, and can be imported like so:
 
 ```python
-from sequitur.models import CONV_LSTM_AE
+from sequitur_single.models import CONV_LSTM_AE
 ```
 
 More details about each model are in the "Models" section below.
@@ -49,8 +49,8 @@ From here, you can either initialize the model yourself and write your own train
 
 ```python
 import torch
-from sequitur.models import CONV_LSTM_AE
-from sequitur import quick_train
+from sequitur_single.models import CONV_LSTM_AE
+from sequitur_single import quick_train
 
 train_set = [torch.randn(10, 5, 5) for _ in range(100)]
 encoder, decoder, _, _ = quick_train(CONV_LSTM_AE, train_set, encoding_dim=4)
@@ -117,19 +117,19 @@ Consists of fully-connected layers stacked on top of each other. Can only be use
 To create the autoencoder shown in the diagram above, use the following arguments:
 
 ```python
-from sequitur.models import LINEAR_AE
+from sequitur_single.models import LINEAR_AE
 
 model = LINEAR_AE(
-  input_dim=10,
-  encoding_dim=4,
-  h_dims=[8, 6],
-  h_activ=None,
-  out_activ=None
+    input_dim=10,
+    encoding_dim=4,
+    h_dims=[8, 6],
+    h_activ=None,
+    out_activ=None
 )
 
-x = torch.randn(10) # Sequence of 10 numbers
-z = model.encoder(x) # z.shape = [4]
-x_prime = model.decoder(z) # x_prime.shape = [10]
+x = torch.randn(10)  # Sequence of 10 numbers
+z = model.encoder(x)  # z.shape = [4]
+x_prime = model.decoder(z)  # x_prime.shape = [10]
 ```
 
 #### Sequences of 1D Vectors
@@ -153,19 +153,19 @@ Autoencoder for sequences of vectors which consists of stacked LSTMs. Can be tra
 To create the autoencoder shown in the diagram above, use the following arguments:
 
 ```python
-from sequitur.models import LSTM_AE
+from sequitur_single.models import LSTM_AE
 
 model = LSTM_AE(
-  input_dim=3,
-  encoding_dim=7,
-  h_dims=[64],
-  h_activ=None,
-  out_activ=None
+    input_dim=3,
+    encoding_dim=7,
+    h_dims=[64],
+    h_activ=None,
+    out_activ=None
 )
 
-x = torch.randn(10, 3) # Sequence of 10 3D vectors
-z = model.encoder(x) # z.shape = [7]
-x_prime = model.decoder(z, seq_len=10) # x_prime.shape = [10, 3]
+x = torch.randn(10, 3)  # Sequence of 10 3D vectors
+z = model.encoder(x)  # z.shape = [7]
+x_prime = model.decoder(z, seq_len=10)  # x_prime.shape = [10, 3]
 ```
 
 #### Sequences of 2D/3D Matrices
@@ -188,18 +188,18 @@ Autoencoder for sequences of 2D or 3D matrices/images, loosely based on the CNN-
 **Example:**
 
 ```python
-from sequitur.models import CONV_LSTM_AE
+from sequitur_single.models import CONV_LSTM_AE
 
 model = CONV_LSTM_AE(
-  input_dims=(50, 100),
-  encoding_dim=16,
-  kernel=(5, 8),
-  stride=(3, 5),
-  h_conv_channels=[4, 8],
-  h_lstm_channels=[32, 64]
+    input_dims=(50, 100),
+    encoding_dim=16,
+    kernel=(5, 8),
+    stride=(3, 5),
+    h_conv_channels=[4, 8],
+    h_lstm_channels=[32, 64]
 )
 
-x = torch.randn(22, 50, 100) # Sequence of 22 50x100 images
-z = model.encoder(x) # z.shape = [16]
-x_prime = model.decoder(z, seq_len=22) # x_prime.shape = [22, 50, 100]
+x = torch.randn(22, 50, 100)  # Sequence of 22 50x100 images
+z = model.encoder(x)  # z.shape = [16]
+x_prime = model.decoder(z, seq_len=22)  # x_prime.shape = [22, 50, 100]
 ```
